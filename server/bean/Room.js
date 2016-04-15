@@ -6,8 +6,8 @@
 
 'use strict';
 
-var BaseBean = require('./basebean.js');
-var Util = require('../util/util.js');
+var BaseBean = require('./BaseBean.js');
+var Util = require('../util/Util.js');
 
 function Room(id, title) {
 	BaseBean.call(this, id);
