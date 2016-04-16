@@ -1,24 +1,25 @@
 /*
- * @File:   room.js
+ * @File:   Room.js
  * @Author: yintaibing, SCUT Software Engineering, Grade 2012, Class 6.
  * @Date:   2016/04/15
  */
 
 'use strict';
 
+var Util = require('util.js');
 var BaseBean = require('./BaseBean.js');
-var Util = require('../util/Util.js');
 
 function Room(id, title) {
 	BaseBean.call(this, id);
 
 	this.title = title;
+	this.categoryId = null;
 	this.isLiving = false;
 	this.publisher = null;
 	this.audiences = null;
 }
 
-Util.inherit(Room, BaseBean);
+Util.inherits(Room, BaseBean);
 
 Room.prototype.getTitle = function() {
 	return this.title;
@@ -26,6 +27,14 @@ Room.prototype.getTitle = function() {
 
 Room.prototype.setTitle = function(title) {
 	this.title = title;
+};
+
+Room.prototype.getCategoryId = function() {
+	return this.categoryId;
+};
+
+Room.prototype.setCategoryId = function(categoryId) {
+	this.categoryId = categoryId;
 };
 
 Room.prototype.getIsLiving = function() {

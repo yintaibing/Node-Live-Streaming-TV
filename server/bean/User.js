@@ -6,8 +6,8 @@
 
 'use strict';
 
+var Util = require('util');
 var BaseBean = require('./BaseBean.js');
-var Util = require('../util/Util.js');
 
 function User(id, name, password) {
 	BaseBean.call(this, id);
@@ -19,7 +19,7 @@ function User(id, name, password) {
 	this.likes = null;
 }
 
-Util.inherit(User, BaseBean);
+Util.inherits(User, BaseBean);
 
 User.prototype.getName = function() {
 	return this.name;

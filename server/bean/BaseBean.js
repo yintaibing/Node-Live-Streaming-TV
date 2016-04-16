@@ -1,5 +1,5 @@
 /*
- * @File:   basebean.js
+ * @File:   BaseBean.js
  * @Author: yintaibing, SCUT Software Engineering, Grade 2012, Class 6.
  * @Date:   2016/04/15
  */

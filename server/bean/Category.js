@@ -1,13 +1,13 @@
 /*
- * @File:   category.js
+ * @File:   Category.js
  * @Author: yintaibing, SCUT Software Engineering, Grade 2012, Class 6.
  * @Date:   2016/04/15
  */
 
 'use strict';
 
+var Util = require('util');
 var BaseBean = require('./BaseBean.js');
-var Util = require('../util/Util.js');
 
 function Category(id, name, coverPath) {
 	BaseBean.call(this, id);
@@ -16,7 +16,7 @@ function Category(id, name, coverPath) {
 	this.coverPath = coverPath;
 }
 
-Util.inherit(Category, BaseBean);
+Util.inherits(Category, BaseBean);
 
 Category.prototype.getName = function() {
 	return this.name;
