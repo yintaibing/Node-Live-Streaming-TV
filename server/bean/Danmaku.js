@@ -4,8 +4,6 @@
  * @Date:   2016/04/15
  */
 
-'use strict';
-
 // The Danmaku type is not necessary to be persisted in DB, so it doesn't need 'id' property;
 function Danmaku(text) {
 	this.text = text;
@@ -17,6 +15,6 @@ Danmaku.prototype.getText = function() {
 
 Danmaku.prototype.setText = function(text) {
 	this.text = text;
-}
+};
 
 module.exports = Danmaku;

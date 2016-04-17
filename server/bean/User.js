@@ -4,8 +4,6 @@
  * @Date:   2016/04/15
  */
 
-'use strict';
-
 var Util = require('util');
 var BaseBean = require('./BaseBean.js');
 

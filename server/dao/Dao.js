@@ -6,13 +6,11 @@
 
 // why don't I use some popular ORM modules? because I just want it to be as simple as possible.
 
-'use strict';
-
 var fs = require('fs');
 var mysql = require('mysql');
 var User = require('../bean/User.js');
 var Room = require('../bean/Room.js');
-var Category = require('../')
+var Category = require('../');
 
 function Dao() {
 	this.config = null;
@@ -232,30 +230,31 @@ Dao.prototype.doTransaction = function(service, sql) {
 };
 
 Dao.prototype.rowsToBean = function(rows, model) {
-	if (!rows || rows.length == 0) {
+	if (!rows || rows.length === 0) {
 		return null;
 	}
 
 	var ary = [];
+	var item, obj;
 	if (model instanceof User) {
-		for (var item in rows) {
-			var obj = new User(item.id, item.name, item.password);
+		for (item in rows) {
+			obj = new User(item.id, item.name, item.password);
 			obj.setCanPublish(item.canPublish);
 			obj.setPortrait(item.portrait);
 			obj.setLikes(JSON.parse(item.likes));
 			ary.push(obj);
 		}
 	} else if (model instanceof Room) {
-		for (var item in rows) {
-			var obj = new Room(item.id, item.title);
+		for (item in rows) {
+			obj = new Room(item.id, item.title);
 			obj.setCategoryId(item.categoryId);
 			obj.setIsLiving(item.isLiving);
 			//obj.setPublisher(null);
 			ary.push(obj);
 		}
 	} else if (model instanceof Category) {
-		for (vat item in rows) {
-			var obj = new Category(item.id, item.name, item.coverPath);
+		for (item in rows) {
+			obj = new Category(item.id, item.name, item.coverPath);
 			ary.push(obj);
 		}
 	} else {
