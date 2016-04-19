@@ -15,6 +15,7 @@ function User(id, name, password) {
 	this.portrait = null;
 	this.canPublish = false;
 	this.likes = null;
+	this.streamId = null;
 }
 
 Util.inherits(User, BaseBean);
@@ -57,6 +58,14 @@ User.prototype.getLikes = function() {
 
 User.prototype.setLikes = function(likes) {
 	this.likes = likes;
+};
+
+User.prototype.getStreamId = function() {
+	return this.streamId;
+};
+
+User.prototype.setStreamId = function(streamId) {
+	this.streamId = streamId;
 };
 
 module.exports = User;

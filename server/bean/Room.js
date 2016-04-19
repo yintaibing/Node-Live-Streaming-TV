@@ -4,17 +4,16 @@
  * @Date:   2016/04/15
  */
 
-var Util = require('util.js');
+var Util = require('util');
 var BaseBean = require('./BaseBean.js');
 
-function Room(id, title) {
+function Room(id, title, publisherId) {
 	BaseBean.call(this, id);
 
 	this.title = title;
+	this.publisherId = publisherId;
 	this.categoryId = null;
 	this.isLiving = false;
-	this.publisher = null;
-	this.audiences = null;
 }
 
 Util.inherits(Room, BaseBean);
@@ -25,6 +24,14 @@ Room.prototype.getTitle = function() {
 
 Room.prototype.setTitle = function(title) {
 	this.title = title;
+};
+
+Room.prototype.getPublisherId = function() {
+	return this.publisherId;
+};
+
+Room.prototype.setPublisherId = function() {
+	this.publisherId = publisherId;
 };
 
 Room.prototype.getCategoryId = function() {
@@ -41,22 +48,6 @@ Room.prototype.getIsLiving = function() {
 
 Room.prototype.setIsLiving = function(isLiving) {
 	this.isLiving = isLiving;
-};
-
-Room.prototype.getPublisher = function() {
-	return this.publisher;
-};
-
-Room.prototype.setPublisher = function(publisher) {
-	this.publisher = publisher;
-};
-
-Room.prototype.getAudiences = function() {
-	return this.audiences;
-};
-
-Room.prototype.setAudiences = function(audiences) {
-	this.audiences = audiences;
 };
 
 module.exports = Room;

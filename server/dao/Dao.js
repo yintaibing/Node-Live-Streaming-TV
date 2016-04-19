@@ -10,7 +10,7 @@ var fs = require('fs');
 var mysql = require('mysql');
 var User = require('../bean/User.js');
 var Room = require('../bean/Room.js');
-var Category = require('../');
+var Category = require('../bean/Category.js');
 
 function Dao() {
 	this.config = null;
@@ -71,8 +71,8 @@ Dao.prototype.create = function(service, obj) {
 			JSON.stringify(obj.geLikes())]);
 	} else if (obj instanceof Room) {
 		sql = mysql.format('INSERT INTO ?? (??, ??, ??, ??) VALUES (?, ?, ?, ?)',
-			['tb_room', 'title', 'categoryId', 'publisherId', 'isLiving',
-			obj.getTitle(), obj.getCategoryId(), obj.getPublisher().getId(), 
+			['tb_room', 'title', 'publisherId', 'categoryId', 'isLiving',
+			obj.getTitle(), obj.getPublisherId(), obj.getCategoryId(), 
 			obj.getIsLiving()]);
 	} else if (obj instanceof Category) {
 		sql = mysql.format('INSERT INTO ?? (??, ??) VALUES (?, ?)',
@@ -94,8 +94,8 @@ Dao.prototype.update = function(service, obj) {
 			'likes', JSON.stringify(obj.geLikes())]);
 	} else if (obj instanceof Room) {
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?',
-			['tb_room', 'title', obj.getTitle(), 'categoryId', obj.getCategoryId(),
-			'publisherId', obj.getPublisher().getId(), 'isLiving', obj.getIsLiving()]);
+			['tb_room', 'title', obj.getTitle(), 'publisherId', obj.getPublisherId(), 
+			'categoryId', obj.getCategoryId(), 'isLiving', obj.getIsLiving()]);
 	} else if (obj instanceof Category) {
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?',
 			['tb_category', 'name', obj.getName(), 'coverPath', obj.getCoverPath()]);
@@ -141,14 +141,14 @@ Dao.prototype.read = function(service, obj) {
 			sql += 'title = \'' + obj.getTitle() + '\' ';
 			conditions++;
 		}
+		if (obj.getPublisherId()) {
+			sql += conditions ? 'AND ' : 'WHERE ';
+			sql += 'publisherId = ' + obj.getPublisherId() + ' ';
+			conditions++;
+		}
 		if (obj.getCategoryId()) {
 			sql += conditions ? 'AND ' : 'WHERE ';
 			sql += 'categoryId = ' + obj.getCategoryId() + ' ';
-			conditions++;
-		}
-		if (obj.getPublisher() && obj.getPublisher().getId()) {
-			sql += conditions ? 'AND ' : 'WHERE ';
-			sql += 'publisherId = ' + obj.getPublisher().getId() + ' ';
 			conditions++;
 		}
 	} else if (obj instanceof Category) {
@@ -247,9 +247,9 @@ Dao.prototype.rowsToBean = function(rows, model) {
 	} else if (model instanceof Room) {
 		for (item in rows) {
 			obj = new Room(item.id, item.title);
+			obj.setPublisherId(item.publisherId);
 			obj.setCategoryId(item.categoryId);
 			obj.setIsLiving(item.isLiving);
-			//obj.setPublisher(null);
 			ary.push(obj);
 		}
 	} else if (model instanceof Category) {
