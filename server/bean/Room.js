@@ -30,7 +30,7 @@ Room.prototype.getPublisherId = function() {
 	return this.publisherId;
 };
 
-Room.prototype.setPublisherId = function() {
+Room.prototype.setPublisherId = function(publisherId) {
 	this.publisherId = publisherId;
 };
 

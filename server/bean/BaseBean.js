@@ -9,7 +9,7 @@ function BaseBean(id) {
 }
 
 BaseBean.prototype.getId = function() {
-	return this.name;
+	return this.id;
 };
 
 BaseBean.prototype.setId = function(id) {
