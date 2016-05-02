@@ -27,6 +27,10 @@ exports.parseQueryString = function(str) {
 };
 
 exports.removeFromAry = function(ary, target) {
+	if (!ary) {
+		return [];
+	}
+
 	var length = ary.length;
 	for (var i = 0; i < length; i++) {
 		if (ary[i] === target) {

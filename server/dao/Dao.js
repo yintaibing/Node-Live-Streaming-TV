@@ -19,7 +19,7 @@ function Dao() {
 
 Dao.prototype.init = function() {
 	var self = this;
-	var reader = fs.createReadStream('../mysql.json');
+	var reader = fs.createReadStream('mysql.json');
 	var json = '';
 	reader.on('data', function(chunk) {
 		json += chunk;
@@ -61,14 +61,15 @@ Dao.prototype.connect = function() {
 	});
 };
 
-Dao.prototype.create = function(service, obj) {
+Dao.prototype.create = function(service, event, obj) {
 	var sql = null;
 
 	if (obj instanceof User) {
+		var likesStr = JSON.stringify(obj.getLikes());
 		sql = mysql.format('INSERT INTO ?? (??, ??, ??, ??, ??) VALUES (?, ?, ?, ?, ?)', 
 			['tb_user', 'name', 'password', 'canPublish', 'portrait', 'likes',
 			obj.getName(), obj.getPassword(), obj.getCanPublish(), obj.getPortrait(), 
-			JSON.stringify(obj.geLikes())]);
+			likesStr !== 'null' ? likesStr : null]);
 	} else if (obj instanceof Room) {
 		sql = mysql.format('INSERT INTO ?? (??, ??, ??, ??) VALUES (?, ?, ?, ?)',
 			['tb_room', 'title', 'publisherId', 'categoryId', 'isLiving',
@@ -81,17 +82,18 @@ Dao.prototype.create = function(service, obj) {
 		throw 'the obj is not a BaseBean!';
 	}
 
-	this.doTransaction(service, sql);
+	this.doTransaction(service, event, sql);
 };
 
-Dao.prototype.update = function(service, obj) {
+Dao.prototype.update = function(service, event, obj) {
 	var sql = null;
 
 	if (obj instanceof User) {
+		var likesStr = JSON.stringify(obj.getLikes());
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ?',
 			['tb_user', 'name', obj.getName(), 'password', obj.getPassword(), 
 			canPublish, obj.getCanPublish(), 'portrait', obj.getPortrait(), 
-			'likes', JSON.stringify(obj.geLikes())]);
+			'likes', likesStr !== 'null' ? likesStr : null]);
 	} else if (obj instanceof Room) {
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?',
 			['tb_room', 'title', obj.getTitle(), 'publisherId', obj.getPublisherId(), 
@@ -103,10 +105,10 @@ Dao.prototype.update = function(service, obj) {
 		throw 'the obj is not a BaseBean!';
 	}
 
-	this.doTransaction(service, sql);
+	this.doTransaction(service, event, sql);
 };
 
-Dao.prototype.read = function(service, obj) {
+Dao.prototype.read = function(service, event, obj) {
 	if (!obj) {
 		throw 'the query object is undefined';
 	}
@@ -128,6 +130,11 @@ Dao.prototype.read = function(service, obj) {
 		if (obj.getPassword()) {
 			sql += conditions ? 'AND ' : 'WHERE ';
 			sql += 'password = \'' + obj.getPassword() + '\' ';
+			conditions++;
+		}
+		if (obj.getCanPublish() === true || obj.getCanPublish() === false) {
+			sql += conditions ? 'AND ' : 'WHERE ';
+			sql += 'canPublish = ' + obj.getCanPublish();
 			conditions++;
 		}
 	} else if (obj instanceof Room) {
@@ -165,6 +172,8 @@ Dao.prototype.read = function(service, obj) {
 	} else {
 		throw 'the obj is not a BaseBean';
 	}
+	
+	console.log(sql);
 
 	this.conn.query(sql, function(err, rows, fields) {
 		if (err) {
@@ -174,11 +183,11 @@ Dao.prototype.read = function(service, obj) {
 
 		var ary = self.rowsToBean(rows, obj);
 		// notify the service that the operation is ended
-		self.emitServiceEvent(service, 'mysql_done', ary);
+		self.emitServiceEvent(service, event, ary);
 	});
 };
 
-Dao.prototype.remove = function(service, obj) {
+Dao.prototype.remove = function(service, event, obj) {
 	if (!obj) {
 		throw 'the obj is undefined';
 	}
@@ -196,34 +205,34 @@ Dao.prototype.remove = function(service, obj) {
 	}
 
 	sql += 'WHERE id = ' + obj.getId();
-	this.doTransaction(service, sql);
+	this.doTransaction(service, event, sql);
 };
 
-Dao.prototype.doTransaction = function(service, sql) {
+Dao.prototype.doTransaction = function(service, event, sql) {
 	var self = this;
-	this.conn.beginTransaction(function(err) {
+	self.conn.beginTransaction(function(err) {
 		if (err) {
 			throw err;
 		}
 
-		connection.query(sql, function(err, result) {
+		self.conn.query(sql, function(err, result) {
 			if (err) {
 				console.error('mysql rollback...');
-				return connection.rollback(function() {
+				return self.conn.rollback(function() {
 					throw err;
 				});
 			}
 
-			connection.commit(function(err) {
+			self.conn.commit(function(err) {
 				if (err) {
-					return connection.rollback(function() {
+					return self.conn.rollback(function() {
 						throw err;
 					});
 				}
 
-				// notify the service that the operation is ended
-				self.emitServiceEvent(service, 'mysql_done');
 				console.log('mysql query ok');
+				// notify the service that the operation is ended
+				self.emitServiceEvent(service, event);
 			});
 		});
 	});
@@ -235,32 +244,35 @@ Dao.prototype.rowsToBean = function(rows, model) {
 	}
 
 	var ary = [];
-	var item, obj;
+	var row, obj;
 	if (model instanceof User) {
-		for (item in rows) {
-			obj = new User(item.id, item.name, item.password);
-			obj.setCanPublish(item.canPublish);
-			obj.setPortrait(item.portrait);
-			obj.setLikes(JSON.parse(item.likes));
+		for (row in rows) {
+			obj = new User(rows[row].id, rows[row].name, rows[row].password);
+			obj.setCanPublish(rows[row].canPublish ? true : false);
+			obj.setPortrait(rows[row].portrait);
+			if (!rows[row].likes) {
+				obj.setLikes(null);
+			} else {
+				obj.setLikes(JSON.parse(rows[row].likes));
+			}
 			ary.push(obj);
 		}
 	} else if (model instanceof Room) {
-		for (item in rows) {
-			obj = new Room(item.id, item.title);
-			obj.setPublisherId(item.publisherId);
-			obj.setCategoryId(item.categoryId);
-			obj.setIsLiving(item.isLiving);
+		for (row in rows) {
+			obj = new Room(rows[row].id, rows[row].title);
+			obj.setPublisherId(rows[row].publisherId);
+			obj.setCategoryId(rows[row].categoryId);
+			obj.setIsLiving(rows[row].isLiving ? true : false);
 			ary.push(obj);
 		}
 	} else if (model instanceof Category) {
-		for (item in rows) {
-			obj = new Category(item.id, item.name, item.coverPath);
+		for (row in rows) {
+			obj = new Category(rows[row].id, rows[row].name, rows[row].coverPath);
 			ary.push(obj);
 		}
 	} else {
 		throw 'the model is not a BaseBean';
 	}
-
 	return ary;
 };
 
@@ -268,3 +280,5 @@ Dao.prototype.rowsToBean = function(rows, model) {
 Dao.prototype.emitServiceEvent = function(service, event, result) {
 	service.emit(event, result);
 };
+
+module.exports = Dao;
