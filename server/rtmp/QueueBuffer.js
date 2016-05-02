@@ -13,7 +13,8 @@ function QueueBuffer() {
 	this.buf = [];
 
 	this.reader.on('error', function(err) {
-		console.error(err);
+		// console.log('queuebuffer error');
+		// console.error(err);
 	});
 }
 
@@ -25,7 +26,7 @@ QueueBuffer.prototype.push = function(data) {
 // read n-length datagram into the buffer
 QueueBuffer.prototype.read = function(length, endQueue) {
 	var tempBuffer = this.reader.read(length);
-	if (tempBuffer == null) {
+	if (tempBuffer === null) {
 		this.rollback();
 		return null;
 	} else {

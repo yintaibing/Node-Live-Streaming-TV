@@ -23,7 +23,7 @@
 ]);
 
 var FMSConst = "Genuine Adobe Flash Media Server 001";
-var FMSConstCrud = Buffer.concat([new Buffer(FMSConstCrud, 'utf8'), RandomCrud]);
+var FMSConstCrud = Buffer.concat([new Buffer(FMSConst, 'utf8'), RandomCrud]);
 var FPConst = "Genuine Adobe Flash Player 001";
 var FPConstCrud = Buffer.concat([new Buffer(FPConst, 'utf8'), RandomCrud]);
 
@@ -44,7 +44,7 @@ function getClientConstDigestOffset(buf) {
 function hasSameBytes(buf1, buf2) {
 	var length = buf1.length;
 	for (var i = 0; i < length; i++) {
-		if (buf[i] !== buf2[i]) {
+		if (buf1[i] !== buf2[i]) {
 			return false;
 		}
 	}
