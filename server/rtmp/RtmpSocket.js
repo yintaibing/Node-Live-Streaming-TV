@@ -1,3 +1,11 @@
+/*
+ * @File:   Category.js
+ * @Author: yintaibing, SCUT Software Engineering, Grade 2012, Class 6.
+ * @Date:   2016/05/02
+ * @Remark: This file refers to: 
+ *          https://github.com/illuspas/Node-Media-Server/blob/master/nm_rtmp_conn.js
+ */
+
 var QueueBuffer = require('./QueueBuffer.js');
 var AMF = require('./RtmpAmf.js');
 var RtmpHandshake = require('./RtmpHandshake.js');
@@ -72,7 +80,7 @@ RtmpSocket.prototype.initUserAndRoom = function(isPublish, streamStr) {
 	var params = myutil.parseQueryString(streamStr);
 	var l = 'l', u = 'u', r = 'r';
 	var isLogined = parseInt(params[l]),
-		userId = parseInt(params[u]),
+		userId = params[u],
 		roomId = params[r];
 
 	if (isPublish) {
@@ -80,7 +88,7 @@ RtmpSocket.prototype.initUserAndRoom = function(isPublish, streamStr) {
 			console.log('no such room holder');
 			return false;
 		}
-		if (userId !== this.rm[roomId].room.getPublisherId()) {
+		if (parseInt(userId) !== this.rm[roomId].room.getPublisherId()) {
 			console.log('no such publisher');
 			return false;
 		}
