@@ -10,6 +10,7 @@ var Constants = require('../myutil/Constants.js');
 
 function BaseService(dao) {
 	this.dao = dao;
+	this.setMaxListeners(0);
 }
 
 Util.inherits(BaseService, EventEmitter);

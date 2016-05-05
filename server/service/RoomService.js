@@ -83,18 +83,24 @@ RoomService.prototype.queryRoomList = function(socketHandler, roomData, roomMana
 	if (!roomData) {
 		// no query condition, get all
 		var res = {};
-		res[KEY_OP] = Constants.OP_GET_ROOM_LIST;
+		res[Constants.KEY_OP] = Constants.OP_GET_ROOM_LIST;
 
-		var roomHolders = [];
+		var rooms = [];
 		for (var roomId in roomManager) {
-			var holder = {};
-			holder.room = roomManager[roomId].room;
-			holder.audienceNum = roomManager[roomId].audiences.length;
-			roomHolders.push(holder);
+			var room = {};
+			room.id = roomManager[roomId].room.getId();
+			room.title = roomManager[roomId].room.getTitle();
+			room.publisherId = roomManager[roomId].room.getPublisherId();
+			room.categoryId = roomManager[roomId].room.getCategoryId();
+			room.isLiving = roomManager[roomId].room.getIsLiving();
+			room.publisherName = roomManager[roomId].publisher.getName();
+			room.audienceNum = roomManager[roomId].audiences.length;
+
+			rooms.push(room);
 		}
 
-		res[KET_STATUS] = Constants.STATUS_OK;
-		res[Constants.KEY_JSON] = roomHolders;
+		res[Constants.KEY_STATUS] = Constants.STATUS_OK;
+		res[Constants.KEY_JSON] = rooms;
 		socketHandler.response(res);
 	} else {
 		// query condition exist, make a query
@@ -103,19 +109,17 @@ RoomService.prototype.queryRoomList = function(socketHandler, roomData, roomMana
 		self.roomData.title = roomData.title;
 		self.setCallback(self.events.getRoomListOk, function(result) {
 			var res = {};
-			res[KEY_OP] = Constants.OP_GET_ROOM_LIST;
+			res[Constants.KEY_OP] = Constants.OP_GET_ROOM_LIST;
 		
-			var roomHolders = [];
 			for (var i in result) {
-				var holder = {};
-				var roomId = result[i].getId();
-				holder.room = roomManager[roomId].room;
-				holder.audienceNum = roomManager[roomId].audiences.length;
-				roomHolders.push(roomHolder);
+				var room = result[i];
+				var roomId = room.getId();
+				room.pulisherName = roomManager[roomId].publisher.getName();
+				room.audienceNum = roomManager[roomId].audiences.length;
 			}
 
-			res[KET_STATUS] = Constants.STATUS_OK;
-			res[Constants.KEY_JSON] = roomHolders;
+			res[Constants.KEY_STATUS] = Constants.STATUS_OK;
+			res[Constants.KEY_JSON] = result;
 			socketHandler.response(res);
 		});
 		self.getRoomList();
