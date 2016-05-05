@@ -15,7 +15,6 @@ module.exports = {
 	KEY_ROOM_TITLE: 'title',
 	KEY_ROOM_ID: 'roomId',
 	KEY_AUDIENCE_NUM: 'audienceNum',
-	KEY_DANMAKU: 'danmaku',
 	KEY_QUERY: 'query',
 	KEY_CATEGORY_ID: 'categoryId',
 
@@ -25,6 +24,7 @@ module.exports = {
 	OP_APPLY_PUBLISH: 'applyPublish',
 	OP_ADD_LIKE: 'addLike',
 	OP_CANCEL_LIKE: 'cancelLike',
+	OP_GET_CATEGORY_LIST: 'getCategoryList',
 	OP_GET_ROOM_LIST: 'getRoomList',
 	OP_ENTER_ROOM: 'enterRoom',
 	OP_LEAVE_ROOM: 'leaveRoom',

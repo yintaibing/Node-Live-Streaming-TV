@@ -43,7 +43,7 @@ Room.prototype.setCategoryId = function(categoryId) {
 };
 
 Room.prototype.getIsLiving = function() {
-	return this.title;
+	return this.isLiving;
 };
 
 Room.prototype.setIsLiving = function(isLiving) {
