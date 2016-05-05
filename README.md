@@ -11,3 +11,6 @@ This project is only in the purpose of making a demo, extremly recommendation an
   https://github.com/delian/node-rtmpapi
 - PLDroidPlayer
   https://github.com/pili-engineering/PLDroidPlayer
+
+# PS
+Android客户端的代码会在全部完成后提交。The code of the android client will be committed when I complete it all.
