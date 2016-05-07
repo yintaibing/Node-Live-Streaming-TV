@@ -1,3 +1,4 @@
+
 /*
  * @File:   app.js
  * @Author: yintaibing, SCUT Software Engineering, Grade 2012, Class 6.
@@ -5,10 +6,10 @@
  */
 
 var Dao = require('./dao/Dao.js');
-var SocketServer = require('./socket/SocketServer.js');
-var RtmpServer = require('./rtmp/RtmpServer.js');
 var UserService = require('./service/UserService.js');
 var RoomService = require('./service/RoomService.js');
+var SocketServer = require('./socket/SocketServer.js');
+var RtmpServer = require('./rtmp/RtmpServer.js');
 
 var userManager = {};
 var roomManager = {};
@@ -25,7 +26,7 @@ setTimeout(function() {
 			userManager[user.getId()] = user;
 		}
 
-		console.log('all publishers loaded ' + result.length);
+		console.log(result.length + ' publishers loaded');
 	});
 	us.userData.canPublish = true;
 	us.getUser();
@@ -44,9 +45,8 @@ setTimeout(function() {
 			roomManager[roomId].publisher = userManager[room.getPublisherId()];
 			roomManager[roomId].audiences = [];
 			roomManager[roomId].public = {};
-
-			console.log('all room loaded ' + result.length);
 		}
+		console.log(result.length + ' room loaded');
 	});
 	rs.getRoomList();
 }, 2000);
