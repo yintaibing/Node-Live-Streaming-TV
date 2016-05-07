@@ -65,7 +65,6 @@ SocketHandler.prototype.handle = function(data) {
 		var roomId = data[Constants.KEY_ROOM_ID];
 		var roomHolder = this.rm[roomId];
 		delete roomHolder.danmakuSockets[this.socketId];
-		break;
 	}
 
 	case Constants.OP_DANMAKU: {
@@ -73,13 +72,12 @@ SocketHandler.prototype.handle = function(data) {
 		var roomId = data[Constants.KEY_ROOM_ID];
 		var danmaku = data[Constants.KEY_JSON];
 		var danmakuSockets = this.rm[roomId].danmakuSockets;
-		for (var socketId in damakuSockets) {
-			var socket = damakuSockets[socketId];
+		for (var socketId in danmakuSockets) {
+			var socket = danmakuSockets[socketId];
 			var res = {};
 			res[Constants.KEY_OP] = Constants.OP_DANMAKU;
 			res[Constants.KEY_JSON] = danmaku;
-			socket.write(JSON.stringify(res) + '\r\n', 'utf8');
-			socket.pipe(socket);
+			this.response(res);
 		}
 		break;
 	}
