@@ -82,6 +82,7 @@ Dao.prototype.create = function(service, event, obj) {
 		throw 'the obj is not a BaseBean!';
 	}
 
+	console.log(sql);
 	this.doTransaction(service, event, sql);
 };
 
@@ -92,19 +93,22 @@ Dao.prototype.update = function(service, event, obj) {
 		var likesStr = JSON.stringify(obj.getLikes());
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ?',
 			['tb_user', 'name', obj.getName(), 'password', obj.getPassword(), 
-			canPublish, obj.getCanPublish(), 'portrait', obj.getPortrait(), 
+			'canPublish', obj.getCanPublish(), 'portrait', obj.getPortrait(), 
 			'likes', likesStr !== 'null' ? likesStr : null]);
 	} else if (obj instanceof Room) {
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?, ?? = ?, ?? = ?',
 			['tb_room', 'title', obj.getTitle(), 'publisherId', obj.getPublisherId(), 
-			'categoryId', obj.getCategoryId(), 'isLiving', obj.getIsLiving()]);
+			'categoryId', obj.getCategoryId(), 'isLiving', obj.getIsLiving(), 
+			'id', obj.getId()]);
 	} else if (obj instanceof Category) {
 		sql = mysql.format('UPDATE ?? SET ?? = ?, ?? = ?',
 			['tb_category', 'name', obj.getName(), 'coverPath', obj.getCoverPath()]);
 	} else {
 		throw 'the obj is not a BaseBean!';
 	}
-
+	
+	sql += ' WHERE id = ' + obj.getId();
+	console.log(sql);
 	this.doTransaction(service, event, sql);
 };
 
@@ -174,7 +178,6 @@ Dao.prototype.read = function(service, event, obj) {
 	}
 	
 	console.log(sql);
-
 	this.conn.query(sql, function(err, rows, fields) {
 		if (err) {
 			console.error(err);
@@ -205,6 +208,7 @@ Dao.prototype.remove = function(service, event, obj) {
 	}
 
 	sql += 'WHERE id = ' + obj.getId();
+	console.log(sql);
 	this.doTransaction(service, event, sql);
 };
 
