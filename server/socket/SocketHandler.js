@@ -23,12 +23,12 @@ function SocketHandler(userManager, roomManager, dao, socketId, socket) {
 SocketHandler.prototype.handle = function(data) {
 	switch (data[Constants.KEY_OP]) {
 	case Constants.OP_REGISTR: {
-		this.us.register(this, data[Constants.KEY_JSON], this.um);
+		this.us.register(this, data, this.um);
 		break;
 	}
 
 	case Constants.OP_LOGIN: {
-		this.us.login(this, data[Constants.KEY_JSON], this.um);
+		this.us.login(this, data, this.um);
 		break;
 	}
 
@@ -77,15 +77,25 @@ SocketHandler.prototype.handle = function(data) {
 			var res = {};
 			res[Constants.KEY_OP] = Constants.OP_DANMAKU;
 			res[Constants.KEY_JSON] = danmaku;
-			this.response(res);
+			
+			var resStr = Constants.DATAGRAM_TOKEN + JSON.stringify(res) + '\r\n';
+			console.log('response=' + resStr);
+			socket.write(resStr);
+			socket.pipe(socket);
 		}
 		break;
 	}
 
 	case Constants.OP_ADD_LIKE:
+		this.us.addLike(this, data, this.um);
+		break;
 
 	case Constants.OP_CANCEL_LIKE:
+		this.us.cancelLike(this, data, this.um);
+		break;
 
+	default:
+		break;
 	}
 };
 

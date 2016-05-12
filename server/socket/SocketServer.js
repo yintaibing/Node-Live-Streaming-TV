@@ -6,6 +6,8 @@
 
 var net = require('net');
 var uuid = require('node-uuid');
+var Constants = require('../myutil/Constants.js');
+var myutil = require('../myutil/myutil.js');
 var SocketHandler = require('./SocketHandler.js');
 
 var sockets = {};
@@ -28,9 +30,15 @@ SocketServer.prototype.run = function() {
 		console.log('socket connected, id=' + socketId);
 
 		socket.setEncoding('utf8');
+		socket.setMaxListeners(0);
 		socket.on('data', function(data) {
-			console.log('receive data from ' + socketId + '\ndata=' + data);
-			handlers[socketId].handle(JSON.parse(data));
+			var datagrams = data.split(Constants.DATAGRAM_TOKEN);
+			for (var i = 0; i < datagrams.length; i++) {
+				if (!myutil.isBlank(datagrams[i])) {
+					console.log('receive data from ' + socketId + '\ndata=' + datagrams[i]);
+					handlers[socketId].handle(JSON.parse(datagrams[i]));
+				}
+			}
 		});
 		socket.on('end', function() {
 			console.log('socket disconnected, id=' + socketId);
