@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <include layout="@layout/layout_titlebar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lighter_blue"
+        android:paddingBottom="@dimen/dp2"
+        android:paddingLeft="@dimen/dp8"
+        android:paddingRight="@dimen/dp8"
+        android:paddingTop="@dimen/dp2" >
+
+        <TextView
+            android:id="@+id/txtCurrentCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/all_rooms"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtCurrentCategoryRoomNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/all_rooms"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <com.turtletv.android.widget.PullRefreshListView
+        android:id="@+id/listMainPullRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1px" />
+    </com.turtletv.android.widget.PullRefreshListView>
+
+</LinearLayout>

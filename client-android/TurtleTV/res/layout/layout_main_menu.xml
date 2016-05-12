@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp360"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp8" >
+
+        <ImageView
+            android:id="@+id/imgPortrait"
+            android:layout_width="@dimen/dp48"
+            android:layout_height="@dimen/dp48"
+            android:layout_alignParentLeft="true"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY"
+            android:src="@drawable/user_def" />
+
+        <TextView
+            android:id="@+id/txtLoginOrName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp16"
+            android:layout_toRightOf="@id/imgPortrait"
+            android:clickable="true"
+            android:ellipsize="end"
+            android:maxEms="10"
+            android:singleLine="true"
+            android:text="@string/login"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtRegisterOrLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtLoginOrName"
+            android:layout_marginLeft="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp8"
+            android:layout_toRightOf="@id/imgPortrait"
+            android:clickable="true"
+            android:text="@string/register"
+            android:textSize="18sp" >
+        </TextView>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:id="@+id/layoutMainMenuBtns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/btnMainMenuAllRooms"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:background="@drawable/list_item_with_top_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp8"
+                android:text="@string/all_rooms"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnMainMenuCategories"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:background="@drawable/list_item_with_top_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp8"
+                android:text="@string/category"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/layoutMainMenuCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnMainMenuMyLikes"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:background="@drawable/list_item_with_top_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp8"
+                android:text="@string/my_likes"
+                android:textSize="18sp" />
+            
+            <Button
+                android:id="@+id/btnMainMenuApplyPublish"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:background="@drawable/list_item_with_top_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp8"
+                android:text="@string/apply_publish"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnMainMenuSettings"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:background="@drawable/list_item_with_top_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp8"
+                android:text="@string/settings"
+                android:textSize="18sp" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnMainMenuExit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:background="@drawable/list_item_with_top_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp8"
+                android:text="@string/exit"
+                android:textSize="18sp" >
+            </Button>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

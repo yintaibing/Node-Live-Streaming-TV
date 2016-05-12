@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/layout_titlebar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp8" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/input_host"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:inputType="textUri"
+            android:singleLine="true"
+            android:textColor="@color/blue"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:text="@string/input_socket_port"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtSocketPort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/blue"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtSettingsErr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:singleLine="true"
+            android:textColor="@color/red"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnSettingsConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp48"
+            android:layout_marginTop="@dimen/dp8"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/layout_titlebar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp8" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/input_room_title"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtApplyPublishRoomTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:hint="@string/hint_room_title"
+            android:inputType="text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtApplyPublishCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp8"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnApplyPublishChooseCategory"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp48"
+            android:layout_marginTop="@dimen/dp8"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:text="@string/choose_category"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnApplyPublish"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp48"
+            android:layout_marginTop="@dimen/dp8"
+            android:background="@drawable/btn"
+            android:gravity="center"
+            android:text="@string/apply_publish"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>

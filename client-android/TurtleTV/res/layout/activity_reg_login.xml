@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/layout_titlebar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageButton
+            android:id="@+id/imgBtnRegLoginPortrait"
+            android:layout_width="@dimen/dp48"
+            android:layout_height="@dimen/dp48"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp96"
+            android:background="@null"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/user_def" />
+
+        <TextView
+            android:id="@+id/txtRegLoginPortraitHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgBtnRegLoginPortrait"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp8"
+            android:singleLine="true"
+            android:text="@string/hint_portrait"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="@dimen/dp256"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtRegLoginPortraitHint"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp8"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/edtRegLoginName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:hint="@string/hint_name"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edtRegLoginPsw"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:layout_marginTop="@dimen/dp8"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtRegLoginErr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp8"
+                android:gravity="center"
+                android:textColor="@color/red"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnRegLogin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp48"
+                android:layout_marginTop="@dimen/dp8"
+                android:background="@drawable/btn"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

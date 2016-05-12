@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.turtletv.android.widget.AspectLayout
+        android:id="@+id/aspectLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.pili.pldroid.player.widget.VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.turtletv.android.widget.AspectLayout>
+
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@+id/danmakuView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/txtPlayerLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/loading"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:id="@+id/layoutPlayerTitlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp48"
+        android:layout_alignParentTop="true"
+        android:alpha="0.8"
+        android:background="@color/blue"
+        android:visibility="invisible" >
+
+        <ImageButton
+            android:id="@+id/imgBtnPlayerLeaveRoom"
+            android:layout_width="@dimen/dp48"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/titlebar"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/txtPlayerRoomTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/imgBtnPlayerLeaveRoom"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnPlayerLike"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/titlebar"
+            android:paddingLeft="@dimen/dp8"
+            android:paddingRight="@dimen/dp8"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutPlayerBottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp48"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.8"
+        android:background="@color/blue"
+        android:visibility="invisible" >
+
+        <ImageButton
+            android:id="@+id/imgBtnPlayerPlayPause"
+            android:layout_width="@dimen/dp48"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/titlebar"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:src="@drawable/pause" />
+
+        <EditText
+            android:id="@+id/edtPlayerDanmaku"
+            android:layout_width="@dimen/dp360"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp8"
+            android:layout_toRightOf="@id/imgBtnPlayerPlayPause"
+            android:hint="@string/hint_input_danmaku"
+            android:maxLength="20"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnPlayerSendDanmaku"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp32"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp8"
+            android:layout_toRightOf="@id/edtPlayerDanmaku"
+            android:background="@drawable/btn"
+            android:paddingLeft="@dimen/dp4"
+            android:paddingRight="@dimen/dp4"
+            android:text="@string/send_danmaku"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxPlayerDanmaku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp8"
+            android:checked="true"
+            android:text="@string/danmaku_on"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

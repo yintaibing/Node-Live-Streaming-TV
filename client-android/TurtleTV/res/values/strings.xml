@@ -1,0 +1,36 @@
+<resources>
+
+    <string name="app_name">TurtleTV</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="back">返回</string>
+    <string name="settings">设置</string>
+	<string name="login">登录</string>
+	<string name="logout">注销</string>
+	<string name="register">注册</string>
+	<string name="all_rooms">所有房间</string>
+	<string name="category">分类</string>
+	<string name="apply_publish">申请直播</string>
+	<string name="my_publish">我的直播</string>
+	<string name="my_likes">我的收藏</string>
+	<string name="exit">退出</string>
+	<string name="loading">正在加载&#8230;</string>
+	<string name="send_danmaku">发射弹幕</string>
+	<string name="danmaku_switch">弹幕开关</string>
+	<string name="danmaku_off">弹幕已关闭</string>
+	<string name="danmaku_on">弹幕已开启</string>
+	<string name="no_more_room_found">找不到更多房间了哦~</string>
+	<string name="open_obs">打开OBS推流软件，设定>广播设定界面，将如下信息对应填写：</string>
+	<string name="stream_address">串流地址（FMS URL）：</string>
+	<string name="stream_name">串流码：</string>
+	<string name="input_room_title">输入房间标题：</string>
+	<string name="choose_category">选择房间分类</string>
+	<string name="input_host">输入服务器地址或IP：</string>
+	<string name="input_socket_port">输入服务器端口：</string>
+	
+	<string name="hint_input_danmaku">输入弹幕</string>
+	<string name="hint_portrait">点击头像可以设置头像</string>
+	<string name="hint_name">输入用户名</string>
+	<string name="hint_password">输入密码</string>
+	<string name="hint_room_title">输入房间标题</string>
+</resources>
