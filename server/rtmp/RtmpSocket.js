@@ -123,7 +123,7 @@ RtmpSocket.prototype.initUserAndRoom = function(isPublish, streamStr) {
 			this.um[userId] = this.user;
 		}
 		this.user.setStreamId(this.streamId);
-		this.rh.audiences.push(userId);
+		this.rh.audiences.push(this.user.getId());
 		return true;
 	}
 };
@@ -142,8 +142,10 @@ RtmpSocket.prototype.stop = function() {
     		var stream = this.rh.rtmpConns[streamId];
     		if (!stream.isPublisherStream) {
     			stream.sendStreamEOF();
+                delete this.rh.rtmpConns[streamId];
     		}
     	}
+        delete this.rh.rtmpConns[this.streamId];
     } else {
     	this.rh.audiences = myutil.removeFromAry(this.rh.audiences, this.user.getId());
     }

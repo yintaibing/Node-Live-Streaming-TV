@@ -20,20 +20,19 @@ dao.init();
 setTimeout(function() {
 	// read all publishers from database
 	var us = new UserService(dao);
-	us.setCallback(us.events.getUserOk, function(result) {
+	us.userData.canPublish = true;
+	us.getUser(function(result) {
 		for (var i in result) {
 			var user = result[i];
 			userManager[user.getId()] = user;
 		}
 
-		console.log(result.length + ' publishers loaded');
+		console.log((!result ? 0 : result.length) + ' publishers loaded');
 	});
-	us.userData.canPublish = true;
-	us.getUser();
 
 	// read all room from database
 	var rs = new RoomService(dao);
-	rs.setCallback(rs.events.getRoomListOk, function(result) {
+	rs.getRoomList(function(result) {
 		for (var i in result) {
 			var room = result[i];
 			var roomId = room.getId();
@@ -46,9 +45,8 @@ setTimeout(function() {
 			roomManager[roomId].audiences = [];
 			roomManager[roomId].public = {};
 		}
-		console.log(result.length + ' room loaded');
+		console.log((!result ? 0 : result.length) + ' room loaded');
 	});
-	rs.getRoomList();
 }, 2000);
 
 // start SocketServer
