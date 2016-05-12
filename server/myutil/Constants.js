@@ -6,9 +6,11 @@
 
 module.exports = {
 	DATAGRAM_TOKEN: '$DATAGRAM$',
+	DATAGRAM_TOKEN_LEN: 10,
 
 	KEY_OP: 'op',
 	KEY_USER_ID: 'userId',
+	KEY_RANDOM_USER_ID: 'randomUserId',
 	KEY_JSON: 'json',
 	KEY_STATUS: 'status',
 	KEY_MSG: 'msg',

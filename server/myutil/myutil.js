@@ -37,4 +37,9 @@ exports.removeFromAry = function(ary, target) {
 			return ary.slice(0, i).concat(ary.slice(i + 1));
 		}
 	}
+	return ary;
+};
+
+exports.isBlank = function(s) {
+	return (s === '' || s === undefined || s === null);
 };
