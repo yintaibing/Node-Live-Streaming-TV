@@ -8,6 +8,7 @@ var Util = require('util');
 var BaseService = require('./BaseService.js');
 var User = require('../bean/User.js');
 var Constants = require('../myutil/Constants.js');
+var myutil = require('../myutil/myutil.js');
 
 function UserService(dao) {
 	BaseService.call(this, dao);
@@ -22,35 +23,40 @@ function UserService(dao) {
 
 Util.inherits(UserService, BaseService);
 
-UserService.prototype.addUser = function() {
+UserService.prototype.addUser = function(callback) {
+	this.setCallback(this.events.addUserOk, callback);
+
 	var user = new User(null, this.userData.name, this.userData.password);
 	this.dao.create(this, this.events.addUserOk, user);
 };
 
-UserService.prototype.getUser = function() {
+UserService.prototype.getUser = function(callback) {
+	this.setCallback(this.events.getUserOk, callback);
+
 	var user = new User(this.userData.id, this.userData.name, this.userData.password);
 	user.setCanPublish(this.userData.canPublish);
 	this.dao.read(this, this.events.getUserOk, user);
 };
 
-UserService.prototype.updateUser = function(user) {
+UserService.prototype.updateUser = function(user, callback) {
+	this.setCallback(this.events.updateUserOk, callback);
+
 	this.dao.update(this, this.events.updateUserOk, user);
 };
 
-UserService.prototype.register = function(socketHandler, userData, userManager) {
+UserService.prototype.register = function(socketHandler, json, userManager) {
 	var self = this;
 	self.userData = {};
-	self.userData.id = userData.id;
-	self.userData.name = userData.name;
-	self.userData.password = userData.password;
+	self.userData.name = json[Constants.KEY_JSON].name;
 
 	// if the user name is unique or not
-	self.setCallback(self.events.getUserOk, function(result) {
+	self.getUser(function(result) {
 		if (!result) {
 			// user name is unique, when new user has been added, then read it from database
-			self.setCallback(self.events.addUserOk, function() {
+			self.userData.password = json[Constants.KEY_JSON].password;
+			self.addUser(function() {
 				// reset self callback to read the new user from database after create
-				self.setCallback(self.events.getUserOk, function(result) {
+				self.getUser(function(result) {
 					var res = {};
 					res[Constants.KEY_OP] = Constants.OP_REGISTR;
 					if (!result) {
@@ -58,17 +64,14 @@ UserService.prototype.register = function(socketHandler, userData, userManager) 
 						res[Constants.KEY_MSG] = '注册成功，但登录失败';
 					} else {
 						// add user to UserManager
+						delete userManager[json[Constants.KEY_RANDOM_USER_ID]];
 						userManager[result[0].getId()] = result[0];
 						res[Constants.KEY_STATUS] = Constants.STATUS_OK;
 						res[Constants.KEY_JSON] = result[0];
 					}
 					socketHandler.response(res);
 				});
-				self.getUser();
-
 			});
-			self.addUser();
-
 		} else {
 			// user name is not unique
 			var res = {};
@@ -78,16 +81,15 @@ UserService.prototype.register = function(socketHandler, userData, userManager) 
 			socketHandler.response(res);
 		}
 	});
-	self.getUser();
 };
 
-UserService.prototype.login = function(socketHandler, userData, userManager) {
+UserService.prototype.login = function(socketHandler, json, userManager) {
 	var self = this;
 	self.userData = {};
-	self.userData.name = userData.name;
-	self.userData.password = userData.password;
+	self.userData.name = json[Constants.KEY_JSON].name;
+	self.userData.password = json[Constants.KEY_JSON].password;
 
-	self.setCallback(self.events.getUserOk, function(result) {
+	self.getUser(function(result) {
 		var res = {};
 		res[Constants.KEY_OP] = Constants.OP_LOGIN;
 
@@ -97,7 +99,10 @@ UserService.prototype.login = function(socketHandler, userData, userManager) {
 			res[Constants.KEY_STATUS] = Constants.STATUS_OK;
 			res[Constants.KEY_JSON] = result[0];
 
-			userManager[result[0].getId()] = result[0];
+			if (!userManager[result[0].getId()]) {
+				delete userManager[json[Constants.KEY_RANDOM_USER_ID]];
+				userManager[result[0].getId()] = result[0];
+			}
 		} else {
 			res[Constants.KEY_STATUS] = Constants.STATUS_ERROR;
 			res[Constants.KEY_MSG] = '用户名或密码错误';
@@ -105,7 +110,6 @@ UserService.prototype.login = function(socketHandler, userData, userManager) {
 
 		socketHandler.response(res);
 	});
-	self.getUser();
 };
 
 UserService.prototype.logout = function(socketHandler, userId, userManager) {
@@ -117,7 +121,7 @@ UserService.prototype.applyPublish = function(socketHandler, json, userManager) 
 	self.userData = {};
 	self.userData.id = json[Constants.KEY_USER_ID];
 
-	self.setCallback(self.events.getUserOk, function(result) {
+	self.getUser(function(result) {
 		if (!result) {
 			// user do not exist
 			res[Constants.KEY_OP] = Constants.OP_APPLY_PUHLISH;
@@ -129,13 +133,43 @@ UserService.prototype.applyPublish = function(socketHandler, json, userManager) 
 			// user exist, update it
 			result[0].setCanPublish(true);
 			userManager[result[0].getId()] = result[0];
-			self.setCallback(self.events.updateUserOk, function() {
+			self.updateUser(result[0], function() {
 				socketHandler.rs.applyPublish(socketHandler, json, userManager, socketHandler.rm);
 			});
-			self.updateUser(result[0]);
 		}
 	});
-	self.getUser();
+};
+
+UserService.prototype.addLike = function(socketHandler, json, userManager) {
+	var user = userManager[json[Constants.KEY_USER_ID]];
+	if (!user.getLikes()) {
+		user.setLikes([]);
+	}
+	user.getLikes().push(json[Constants.KEY_ROOM_ID]);
+
+	this.updateUser(user, function() {
+		var res = {};
+		res[Constants.KEY_OP] = Constants.OP_ADD_LIKE;
+		res[Constants.KEY_STATUS] = Constants.STATUS_OK;
+		res[Constants.KEY_ROOM_ID] = json[Constants.KEY_ROOM_ID];
+
+		socketHandler.response(res);
+	});
+};
+
+UserService.prototype.cancelLike = function(socketHandler, json, userManager) {
+	var user = userManager[json[Constants.KEY_USER_ID]];
+	user.setLikes(myutil.removeFromAry(!user.getLikes() ? [] : user.getLikes(), 
+		json[Constants.KEY_ROOM_ID]));
+
+	this.updateUser(user, function() {
+		var res = {};
+		res[Constants.KEY_OP] = Constants.OP_CANCEL_LIKE;
+		res[Constants.KEY_STATUS] = Constants.STATUS_OK;
+		res[Constants.KEY_ROOM_ID] = json[Constants.KEY_ROOM_ID];
+
+		socketHandler.response(res);
+	});
 };
 
 module.exports = UserService;

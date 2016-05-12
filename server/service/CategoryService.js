@@ -20,7 +20,9 @@ function CategoryService(dao) {
 
 Util.inherits(CategoryService, BaseService);
 
-CategoryService.prototype.getCategoryList = function() {
+CategoryService.prototype.getCategoryList = function(callback) {
+	this.setCallback(this.events.getCategoryListOk, callback);
+
 	var category = new Category(this.categoryData.id, this.categoryData.name, this.categoryData.coverPath);
 	this.dao.read(this, this.events.getCategoryListOk, category);
 };
@@ -33,7 +35,7 @@ CategoryService.prototype.queryCategoryList = function(socketHandler, categoryDa
 		this.categoryData.coverPath = categoryData.coverPath;
 	}
 
-	this.setCallback(this.events.getCategoryListOk, function(result) {
+	this.getCategoryList(function(result) {
 		var res = {};
 		res[Constants.KEY_OP] = Constants.OP_GET_CATEGORY_LIST;
 
@@ -47,7 +49,6 @@ CategoryService.prototype.queryCategoryList = function(socketHandler, categoryDa
 
 		socketHandler.response(res);
 	});
-	this.getCategoryList();
 };
 
 module.exports = CategoryService;

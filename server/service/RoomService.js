@@ -23,24 +23,32 @@ function RoomService(dao) {
 
 Util.inherits(RoomService, BaseService);
 
-RoomService.prototype.addRoom = function() {
+RoomService.prototype.addRoom = function(callback) {
+	this.setCallback(this.events.addRoomOk, callback);
+
 	var room = new Room(null, this.roomData.title, this.roomData.publisherId);
 	room.setCategoryId(this.roomData.categoryId);
 	this.dao.create(this, this.events.addRoomOk, room);
 };
 
-RoomService.prototype.updateRoom = function() {
+RoomService.prototype.updateRoom = function(callback) {
+	this.setCallback(this.events.updateRoomOk, callback);
+
 	var room = new Room(this.roomData.id, this.roomData.title, this.roomData.publisherId);
 	room.setCategoryId(this.roomData.categoryId);
 	this.dao.update(this, this.events.updateRoomOk, room);
 };
 
-RoomService.prototype.getRoom = function() {
+RoomService.prototype.getRoom = function(callback) {
+	this.setCallback(this.events.getRoomOk, callback);
+
 	var room = new Room(this.roomData.id, this.roomData.title, this.roomData.publisherId);
 	this.dao.read(this, this.events.getRoomOk, room);
 };
 
-RoomService.prototype.getRoomList = function() {
+RoomService.prototype.getRoomList = function(callback) {
+	this.setCallback(this.events.getRoomListOk, callback);
+
 	var room = new Room(null, this.roomData.title, null);
 	this.dao.read(this, this.events.getRoomListOk, room);
 };
@@ -52,8 +60,8 @@ RoomService.prototype.applyPublish = function(socketHandler, json, userManager, 
 	self.roomData.publisherId = json[Constants.KEY_USER_ID];
 	self.roomData.categoryId = json[Constants.KEY_CATEGORY_ID];
 
-	self.setCallback(self.events.addRoomOk, function() {
-		self.setCallback(self.events.getRoomOk, function(result) {
+	self.addRoom(function() {
+		self.getRoom(function(result) {
 			var res = {};
 			res[Constants.KEY_OP] = Constants.OP_APPLY_PUBLISH;
 
@@ -61,19 +69,24 @@ RoomService.prototype.applyPublish = function(socketHandler, json, userManager, 
 				res[Constants.KEY_STATUS] = Constants.STATUS_ERROR;
 				res[Constants.KEY_MSG] = '申请直播失败';
 			} else {
+				var roomHolder = {};
+				roomHolder.room = result[0];
+				roomHolder.rtmpConns = {};
+				roomHolder.danmakuSockets = {};
+				roomHolder.publisher = userManager[result[0].getPublisherId()];
+				roomHolder.audiences = [];
+				roomHolder.public = {};
+				roomManager[result[0].getId()] = roomHolder;
+
+				result[0].publisherName = roomHolder.publisher.getName();
+				result[0].audienceNum = roomHolder.audiences.length;
+
 				res[Constants.KEY_STATUS] = Constants.STATUS_OK;
 				res[Constants.KEY_JSON] = result[0];
-
-				roomManager[result[0].getId()] = {};
-				var roomHolder = roomManager[result[0].getId()];
-				roomHolder.room = result[0];
-				roomHolder.publisher = userManager[result[0].getPublisherId()];
 			}
 			socketHandler.response(res);
 		});
-		self.getRoom();
 	});
-	self.addRoom();
 };
 
 // modify my room
@@ -88,13 +101,14 @@ RoomService.prototype.queryRoomList = function(socketHandler, roomData, roomMana
 		var rooms = [];
 		for (var roomId in roomManager) {
 			var room = {};
-			room.id = roomManager[roomId].room.getId();
-			room.title = roomManager[roomId].room.getTitle();
-			room.publisherId = roomManager[roomId].room.getPublisherId();
-			room.categoryId = roomManager[roomId].room.getCategoryId();
-			room.isLiving = roomManager[roomId].room.getIsLiving();
-			room.publisherName = roomManager[roomId].publisher.getName();
-			room.audienceNum = roomManager[roomId].audiences.length;
+			var roomHolder = roomManager[roomId];
+			room.id = roomHolder.room.getId();
+			room.title = roomHolder.room.getTitle();
+			room.publisherId = roomHolder.room.getPublisherId();
+			room.categoryId = roomHolder.room.getCategoryId();
+			room.isLiving = roomHolder.room.getIsLiving();
+			room.publisherName = roomHolder.publisher.getName();
+			room.audienceNum = roomHolder.audiences.length;
 
 			rooms.push(room);
 		}
@@ -107,7 +121,7 @@ RoomService.prototype.queryRoomList = function(socketHandler, roomData, roomMana
 		var self = this;
 		self.roomData = {};
 		self.roomData.title = roomData.title;
-		self.setCallback(self.events.getRoomListOk, function(result) {
+		self.getRoomList(function(result) {
 			var res = {};
 			res[Constants.KEY_OP] = Constants.OP_GET_ROOM_LIST;
 		
@@ -122,7 +136,6 @@ RoomService.prototype.queryRoomList = function(socketHandler, roomData, roomMana
 			res[Constants.KEY_JSON] = result;
 			socketHandler.response(res);
 		});
-		self.getRoomList();
 	}
 };
 
