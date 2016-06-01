@@ -1,14 +1,31 @@
 package com.turtletv.android.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.util.SparseArray;
 
 import com.turtletv.android.bean.Room;
+import com.turtletv.android.util.LogUtil;
 
 public class RoomManager {
+	private static Comparator<Room> sComparator = new Comparator<Room>() {
+		@Override
+		public int compare(Room r1, Room r2) {
+			if (r1.getIsLiving()) {
+				if (!r2.getIsLiving()) {
+					return -1;
+				}
+			} else if (r2.getIsLiving()) {
+				return 1;
+			}
+			return r1.getId() - r2.getId();
+		}
+	};
+	
 	private static RoomManager sInstance;
 	
 	public static RoomManager getInstance() {
@@ -74,23 +91,28 @@ public class RoomManager {
 				}
 			}
 		}
+		
+		Collections.sort(list, sComparator);
 		return list;
 	}
 	
 	public void load(List<Room> rooms) {
 		mAllRooms = rooms;
 		mRooms = new SparseArray<List<Room>>();
-		int size = rooms.size();
 		
-		for (int i = 0; i < size; i++) {
-			Room room = rooms.get(i);
+		for (int i = 0; i < mAllRooms.size(); i++) {
+			Room room = mAllRooms.get(i);
 			List<Room> list = mRooms.get(room.getCategoryId());
 			if (list == null) {
 				mRooms.put(room.getCategoryId(), new LinkedList<Room>());
 				list = mRooms.get(room.getCategoryId());
 			}
 			list.add(room);
+			
+			Collections.sort(list, sComparator);
 		}
+		
+		Collections.sort(mAllRooms, sComparator);
 	}
 	
 	public void add(Room room) {
@@ -101,6 +123,8 @@ public class RoomManager {
 			list = mRooms.get(room.getCategoryId());
 		}
 		list.add(room);
+		
+		Collections.sort(list, sComparator);
 	}
 	
 	public void clear() {

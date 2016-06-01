@@ -650,6 +650,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				mPopupMenu.dismiss();
 				return true;
 			}
+			
+			if (mIsMyLikes || mCurrentCategory != null) {
+				// 若当前是我的收藏或某分类，则返回到所有房间
+				sendMsgToHandler(mHandler, MSG_SWITCH_CATEGORY, null);
+				return true;
+			}
 
 			long now = System.currentTimeMillis();
 			if (mLastBackPressed > 0L
@@ -746,7 +752,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				mCurrentRooms = mRoomManager.getLikeRooms(mUserManager
 						.getCurrentUser().getLikes());
 				mTxtCurrentCategory.setText(R.string.my_likes);
-				mTxtCurrentRoomNum.setText("共" + mCurrentRooms.size() + "个房间");
+				mTxtCurrentRoomNum.setText("共"
+						+ (mCurrentRooms == null ? 0 : mCurrentRooms
+								.size()) + "个房间");
 				((MainListAdapter) mMainList.getAdapter())
 						.notifyDataSetChanged();
 			} else {

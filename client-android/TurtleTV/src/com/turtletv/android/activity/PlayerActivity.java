@@ -253,7 +253,8 @@ public class PlayerActivity extends BaseActivity implements OnClickListener,
 		mDanmakuSwitch = (CheckBox) findViewById(R.id.checkBoxPlayerDanmaku);
 
 		mTxtTitle.setText(mRoom != null ? mRoom.getTitle() : StringUtil.BLANK);
-		if (mUserManager.getCurrentUser().getLikes() != null
+		if (mUserManager.isLogined() 
+				&& mUserManager.getCurrentUser().getLikes() != null
 				&& mUserManager.getCurrentUser().getLikes()
 						.contains(mRoom.getId())) {
 			mBtnLike.setText("取消收藏");
@@ -462,12 +463,15 @@ public class PlayerActivity extends BaseActivity implements OnClickListener,
 			break;
 
 		case R.id.btnPlayerLike:
-			if (mUserManager.getCurrentUser().getLikes() != null
-					&& mUserManager.getCurrentUser().getLikes()
-							.contains(mRoom.getId())) {
-				cancelLike();
+			if (mUserManager.isLogined()) {
+				List<Integer> likes = mUserManager.getCurrentUser().getLikes();
+				if (likes != null && likes.contains(mRoom.getId())) {
+					cancelLike();
+				} else {
+					addLike();
+				}
 			} else {
-				addLike();
+				ToastUtil.toast(this, "请先登录");
 			}
 			break;
 
