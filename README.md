@@ -21,4 +21,6 @@ This project is only in the purpose of making a demo, extremly recommendation an
 - 运行服务器，命令行：node app.js。Run the server with command 'node app.js'.
 - 安装运行/client-android/TurtleTV.apk，并在设置界面中修改服务器IP。Install and run the /client-android/TurtleTV.apk and modify the server IP in main menu>Settings。
 - 注册并申请开通直播。Register and Apply to become a publisher.
+- 在电脑上下载安装OBS工具（https://obsproject.com/）。Download and install OBS(https://obsproject.com/) on your PC.
 - 根据“我的直播”中的信息修改OBS的广播设定。modify OBS's broadcast settings according to the info in 'My Publishing'.
+- 在应用的主界面上，下拉列表刷新，即可看到你的直播间，点击进入，开始观看直播并发射弹幕吧！Push the main list in the APP to refresh it, then you can see your live room. Click in, watch real-timely and send some danmaku!
