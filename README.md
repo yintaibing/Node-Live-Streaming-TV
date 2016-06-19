@@ -1,4 +1,7 @@
-# TurtleTV
+﻿# Project Address
+https://github.com/yintaibing/Node-Live-Streaming-TV
+
+# Node-Live-Streaming-TV (Old name: TurtleTV)
 一个用Node.js实现的简单的实时直播平台，目前仅支持RTMP协议，代码工作才刚刚开始。
 A simple live video streaming platfrom implemented with Node.js, supports RTMP protocol only at present. The coding was just started not for long.
 
